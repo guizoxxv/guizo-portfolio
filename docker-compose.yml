@@ -6,6 +6,6 @@ services:
       - ./app:/home/app
     working_dir: /home/app
     ports:
-      - 3007:8080
+      - 3007:3007
     tty: true
-    command: npm start
+    command: npm run watch
