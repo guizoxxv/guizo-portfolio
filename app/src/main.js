@@ -3,8 +3,22 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueMoment from 'vue-moment'
+import './assets/css/app.scss'
 
 Vue.config.productionTip = false
+
+Vue.use(VueMoment)
+
+Vue.filter('ucfirst', (value) => {
+  if(! value) {
+    return ''
+  }
+
+  value = value.toString()
+
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
 
 /* eslint-disable no-new */
 new Vue({

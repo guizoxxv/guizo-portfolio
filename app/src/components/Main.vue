@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <p>Main</p>
-    <p v-for="trabalho in trabalhos">
-      {{ trabalho.nome }} - {{ trabalho.data }}
-    </p>
-  </div>
+  <main>
+    <div v-for="trabalho in trabalhos" class="card">
+      <img :src="'static/img/' + trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
+      <div class="card-hover">
+        <div class="card-hover-content">
+          <h3>{{ trabalho.nome }}</h3>
+          <p class="date">{{ trabalho.data | moment('MMM, YY') | ucfirst }}</p>
+          <p>{{ trabalho.descricao.breve }}</p>
+        </div>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
 import db from './firebaseInit'
-import * as moment from 'moment'
 
 export default {
   name: 'Main',
@@ -19,12 +24,14 @@ export default {
     }
   },
   created() {
-    db.collection('trabalhos').get().then(querySnapshot => {
+    db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         const data = {
           'id': doc.id,
           'nome': doc.data().nome,
-          'data': moment.unix(doc.data().data.seconds).format("DD/MM/YYYY"),
+          'imagem': doc.data().imagem,
+          'descricao': doc.data().descricao,
+          'data': doc.data().data.seconds,
         }
 
         this.trabalhos.push(data)
@@ -33,3 +40,62 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  $green: #16A085;
+
+  * {
+    box-sizing: border-box !important;
+  }
+
+  main {
+    margin: 50px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+    img {
+      display: block; // Remove space bellow
+      width: 100%;
+    }
+  }
+  .card {
+    position: relative;
+    border: 5px solid gray;
+    border-radius: 5px;
+  }
+  .card-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    opacity: 0;
+    transition: 0.3s;
+    &:hover {
+      background: rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+      opacity: 1;
+      transition: 0.3s;
+    }
+    h3 {
+      font-size: 25px;
+      margin: 0 0 5px 0;
+    }
+    .card-hover-content {
+      width: 100%;
+    }
+    .date {
+      margin: 0 0 10px 0;
+      color: $green;
+    }
+    .brief {
+      margin: 0;
+    }
+  }
+</style>
