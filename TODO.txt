@@ -1,1 +1,1 @@
-* Add sass webpack module
+* Add media queries

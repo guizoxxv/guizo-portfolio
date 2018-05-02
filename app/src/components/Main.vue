@@ -1,11 +1,11 @@
 <template>
   <main>
-    <div v-for="trabalho in trabalhos" class="card">
+    <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
       <img :src="'static/img/' + trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
-      <div class="card-hover">
+      <div class="card-hover" @click="showModal(index)">
         <div class="card-hover-content">
           <h3>{{ trabalho.nome }}</h3>
-          <p class="date">{{ trabalho.data | moment('MMM, YY') | ucfirst }}</p>
+          <p class="date">{{ trabalho.data | moment('MMM, YYYY') | ucfirst }}</p>
           <p>{{ trabalho.descricao.breve }}</p>
         </div>
       </div>
@@ -14,42 +14,45 @@
 </template>
 
 <script>
-import db from './firebaseInit'
+  import db from '../firebase/firebaseInit'
 
-export default {
-  name: 'Main',
-  data() {
-    return {
-      trabalhos: []
-    }
-  },
-  created() {
-    db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        const data = {
-          'id': doc.id,
-          'nome': doc.data().nome,
-          'imagem': doc.data().imagem,
-          'descricao': doc.data().descricao,
-          'data': doc.data().data.seconds,
-        }
+  export default {
+    name: 'Main',
+    data() {
+      return {
+        trabalhos: []
+      }
+    },
+    created() {
+      db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const data = {
+            'id': doc.id,
+            'nome': doc.data().nome,
+            'imagem': doc.data().imagem,
+            'descricao': doc.data().descricao,
+            'data': doc.data().data.seconds,
+            'etiquetas': doc.data().etiquetas.sort(),
+            'links': doc.data().links,
+          }
 
-        this.trabalhos.push(data)
+          this.trabalhos.push(data)
+        })
       })
-    })
+    },
+    methods: {
+      showModal(index) {
+        this.$modal.show('trabalho-modal', { trabalho: this.trabalhos[index] })
+      }
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
   $green: #16A085;
 
-  * {
-    box-sizing: border-box !important;
-  }
-
   main {
-    margin: 50px;
+    margin: 50px 80px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;

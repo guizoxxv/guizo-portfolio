@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box !important;
+}
+
 body {
   margin: 0;
   background-image: url("/static/img/pattern.svg");
@@ -12,6 +16,9 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 main {
   flex: 1;
@@ -25,4 +32,9 @@ a {
     text-decoration: none;
     transition: 0.3s
   }
+}
+
+// Fixes
+.v--modal {
+  margin: 20px !important;
 }

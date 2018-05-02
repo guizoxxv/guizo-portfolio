@@ -4,21 +4,18 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueMoment from 'vue-moment'
+import VModal from 'vue-js-modal'
+import { ucFirst, tagLink } from './helpers/filters'
 import './assets/css/app.scss'
 
 Vue.config.productionTip = false
 
 Vue.use(VueMoment)
+Vue.use(VModal)
 
-Vue.filter('ucfirst', (value) => {
-  if(! value) {
-    return ''
-  }
+Vue.filter('ucfirst', ucFirst)
 
-  value = value.toString()
-
-  return value.charAt(0).toUpperCase() + value.slice(1)
-})
+Vue.filter('tagLink', tagLink)
 
 /* eslint-disable no-new */
 new Vue({
