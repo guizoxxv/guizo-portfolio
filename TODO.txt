@@ -1,1 +1,2 @@
-* Add media queries
+* Buscar alternativa para reactive width no modal
+* Fix mudança de posição do botao close ao abrir modal

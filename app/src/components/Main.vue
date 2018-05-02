@@ -101,4 +101,20 @@
       margin: 0;
     }
   }
+
+  @media (max-width: 425px) {
+    main {
+      margin: 15px;
+      grid-template-columns: 1fr;
+      grid-gap: 10px;
+    }
+  }
+
+  @media (max-width: 768px) and (min-width: 426px) {
+    main {
+      margin: 30px;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+    }
+  }
 </style>

@@ -51,5 +51,39 @@
         transition: 0.3s;
       }
     }
-}
+  }
+
+  @media (max-width: 425px) {
+    header {
+      margin: 15px;
+      h1 {
+        margin: 7px;
+        font-size: 50px;
+      }
+      h2 {
+        margin: 7px;
+        font-size: 20px;
+      }
+    }
+    .social {
+      margin: 15px;
+    }
+  }
+
+  @media (max-width: 768px) and (min-width: 426px) {
+    header {
+      margin: 30px;
+      h1 {
+        margin: 7px;
+        font-size: 50px;
+      }
+      h2 {
+        margin: 7px;
+        font-size: 20px;
+      }
+    }
+    .social {
+      margin: 15px;
+    }
+  }
 </style>
