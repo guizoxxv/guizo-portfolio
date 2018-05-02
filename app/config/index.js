@@ -44,7 +44,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/guizo-portfolio-vue/',
+    assetsPublicPath: '/guizo-portfolio-vue',
 
     /**
      * Source Maps
