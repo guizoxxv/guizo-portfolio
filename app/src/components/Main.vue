@@ -1,7 +1,7 @@
 <template>
   <main>
     <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
-      <img :src="'static/img/' + trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
+      <img :src="require('../assets/img/' + trabalho.imagem.arquivo)" :alt="trabalho.imagem.alt">
       <div class="card-hover" @click="showModal(index)">
         <div class="card-hover-content">
           <h3>{{ trabalho.nome }}</h3>

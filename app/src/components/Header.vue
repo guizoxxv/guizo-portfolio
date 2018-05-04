@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img src="static/img/guizo_logo.png" width="100" alt="logo">
+    <img src="../assets/img/guizo_logo.png" width="100" alt="Logo">
     <h1>guizo</h1>
     <h2>Desenvolvedor Web</h2>
     <div class="social">
