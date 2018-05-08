@@ -94,9 +94,6 @@
       }
     }
   }
-  .descricao {
-    text-align: left;
-  }
   .tags {
     li {
       border: 1px solid black;
@@ -132,6 +129,19 @@
       cursor: pointer;
       color: tomato;
       transition: 0.3s;
+    }
+  }
+</style>
+
+<!-- Not scoped for v-html -->
+<style lang="scss">
+  .descricao {
+    text-align: left;
+    a {
+      text-decoration: underline;
+      &:hover {
+        color: #16A085;
+      }
     }
   }
 </style>

@@ -42,6 +42,10 @@ a {
   .modal {
     margin: 10px;
   }
+  body {
+    background-image: none;
+    background-color: black;
+  }
 }
 
 @media (min-width: 426px) {
