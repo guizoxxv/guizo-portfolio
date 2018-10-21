@@ -1,3 +1,4 @@
 module.exports = {
-  // baseUrl: '/guizo-portfolio-vue/',
+  // Descomentar quando subir para gh-pages
+  baseUrl: '/guizo-portfolio-vue/',
 };

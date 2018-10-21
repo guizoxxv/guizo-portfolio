@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build:github": "vue-cli-service build --dest dist_github",
+    "build:site": "vue-cli-service build --dest dist_site"
   },
   "dependencies": {
     "firebase": "^4.13.1",
