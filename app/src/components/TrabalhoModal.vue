@@ -7,7 +7,7 @@
       <h3>{{ trabalho.nome }}</h3>
       <h4>Cliente: <span>{{ trabalho.cliente ? trabalho.cliente : 'Pessoal' }}</span></h4>
       <h4>Data: <span>{{ trabalho.data | moment('DD [de] MMMM [de] YYYY') }}</span></h4>
-      <img :src="require('../assets/img/' + trabalho.imagem.arquivo)" :alt="trabalho.imagem.alt">
+      <img :src="trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
       <h4>Descrição</h4>
       <p class="descricao" v-html="trabalho.descricao.completa"></p>
       <h4>Etiquetas</h4>
