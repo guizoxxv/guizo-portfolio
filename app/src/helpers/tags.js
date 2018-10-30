@@ -67,6 +67,10 @@ const TAGS = {
     nome: 'Webpack',
     url: 'https://webpack.js.org/'
   },
+  nodejs: {
+    nome: 'Node.js',
+    url: 'https://nodejs.org/'
+  }
 }
 
 export default TAGS
