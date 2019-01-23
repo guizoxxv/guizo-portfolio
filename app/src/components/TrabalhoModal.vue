@@ -1,5 +1,5 @@
 <template>
-  <modal name="trabalho-modal" @before-open="beforeOpen" @opened="opened" :adaptive="true" height="auto" width="100%" :scrollable="true" transition="nice-modal-fade">
+  <modal name="trabalho-modal" @before-open="beforeOpen" @opened="opened" :adaptive="true" height="auto" width="100%" :scrollable="true">
     <div v-if="trabalho" class="modal">
       <div class="close" @click="$modal.hide('trabalho-modal')">
         <i class="fa fa-times-circle fa-3x" aria-hidden="true"></i>
@@ -63,7 +63,7 @@
   $green: #16A085;
 
   .modal {
-    padding-top: 20px;
+    padding: 20px;
     color: black;
     font-family: 'Montserrat', sans-serif;
     text-align: center;

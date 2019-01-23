@@ -2,6 +2,11 @@
   box-sizing: border-box !important;
 }
 
+// Fix modal top position error
+.v--modal-overlay .v--modal-background-click {
+  height: auto !important;
+}
+
 body {
   margin: 0;
   min-width: 320px;
