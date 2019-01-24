@@ -71,6 +71,10 @@ const TAGS = {
     nome: 'Wordpress',
     url: 'https://wordpress.org/',
   },
+  sqlserver: {
+    nome: 'Microsoft SQL Server',
+    url: 'https://en.wikipedia.org/wiki/Microsoft_SQL_Server',
+  },
 }
 
 export default TAGS
