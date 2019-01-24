@@ -63,13 +63,13 @@ const TAGS = {
     nome: 'MySQL',
     url: 'https://www.mysql.com/'
   },
-  webpack: {
-    nome: 'Webpack',
-    url: 'https://webpack.js.org/'
-  },
   nodejs: {
     nome: 'Node.js',
     url: 'https://nodejs.org/'
+  },
+  wordpress: {
+    nome: 'Wordpress',
+    url: 'https://wordpress.org/',
   },
 }
 

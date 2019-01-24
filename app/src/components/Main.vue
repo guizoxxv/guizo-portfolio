@@ -34,6 +34,7 @@
             'data': doc.data().data.seconds,
             'etiquetas': doc.data().etiquetas.sort(),
             'links': doc.data().links,
+            'cliente': doc.data().cliente,
           }
 
           this.trabalhos.push(data)

@@ -5,7 +5,33 @@
         <i class="fa fa-times-circle fa-3x" aria-hidden="true"></i>
       </div>
       <h3>{{ trabalho.nome }}</h3>
-      <h4>Cliente: <span>{{ trabalho.cliente ? trabalho.cliente : 'Pessoal' }}</span></h4>
+      <template v-if="trabalho.cliente">
+        <h4>
+          Cliente:
+          <template v-if="trabalho.cliente.final.url">
+            <a :href="trabalho.cliente.final.url">{{ trabalho.cliente.final.nome }}</a>
+          </template>
+          <template v-else>
+            <span>{{ trabalho.cliente.final.nome }}</span>
+          </template>
+        </h4>
+      </template>
+      <template v-else>
+        <h4>Cliente: <span>Pessoal</span></h4>
+      </template>
+      <template v-if="trabalho.cliente && trabalho.cliente.intermediario">
+        <h4>
+          Intermediário:
+          <template v-if="trabalho.cliente.intermediario.url">
+            <a :href="trabalho.cliente.intermediario.url">
+              {{ trabalho.cliente.intermediario.nome }}
+            </a>
+          </template>
+          <template v-else>
+            <span>{{ trabalho.cliente.intermediario.nome }}</span>
+          </template>
+        </h4>
+      </template>
       <h4>Data: <span>{{ trabalho.data | moment('DD [de] MMMM [de] YYYY') }}</span></h4>
       <img :src="trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
       <h4>Descrição</h4>
@@ -37,6 +63,7 @@
     methods: {
       beforeOpen(event) {
         this.trabalho = event.params.trabalho;
+        console.log(this.trabalho);
       },
       opened() {
         this.handleResize()
