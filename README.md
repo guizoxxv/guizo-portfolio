@@ -4,4 +4,4 @@ Guizo's portfolio
 * Serve dist folders with npm packages `server` or `http-server` - port 5000
 * Change dist folder owner after `npm run build` to avoid git permission errors
 * Add single folder to branch on git:
-    * git subtree push --prefix dist_site origin site
+    * git subtree push --prefix app/dist_site origin site
