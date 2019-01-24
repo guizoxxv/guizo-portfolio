@@ -63,7 +63,6 @@
     methods: {
       beforeOpen(event) {
         this.trabalho = event.params.trabalho;
-        console.log(this.trabalho);
       },
       opened() {
         this.handleResize()
