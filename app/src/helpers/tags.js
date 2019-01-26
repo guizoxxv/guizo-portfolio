@@ -9,7 +9,7 @@ const TAGS = {
   },
   sass: {
     nome: 'SASS',
-    url: 'http://sass-lang.com/'
+    url: 'http://sass-lang.com'
   },
   javascript: {
     nome: 'JavaScript',
@@ -17,63 +17,71 @@ const TAGS = {
   },
   jquery: {
     nome: 'jQuery',
-    url: 'https://jquery.com/'
+    url: 'https://jquery.com'
   },
   react: {
     nome: 'React',
-    url: 'https://reactjs.org/'
+    url: 'https://reactjs.org'
   },
   redux: {
     nome: 'Redux',
-    url: 'https://redux.js.org/'
+    url: 'https://redux.js.org'
   },
   mobx: {
     nome: 'MobX',
-    url: 'https://mobx.js.org/'
+    url: 'https://mobx.js.org'
   },
   react_native: {
     nome: 'React Native',
-    url: 'https://facebook.github.io/react-native/'
+    url: 'https://facebook.github.io/react-native'
   },
   vue: {
     nome: 'Vue.js',
-    url: 'https://vuejs.org/'
+    url: 'https://vuejs.org'
   },
   knockout: {
     nome: 'Knockout.js',
-    url: 'http://knockoutjs.com/'
+    url: 'http://knockoutjs.com'
   },
   bootstrap: {
     nome: 'Bootstrap',
-    url: 'https://getbootstrap.com/'
+    url: 'https://getbootstrap.com'
   },
   php: {
     nome: 'PHP',
-    url: 'http://php.net/'
+    url: 'http://php.net'
   },
   laravel: {
     nome: 'Laravel',
-    url: 'https://laravel.com/'
+    url: 'https://laravel.com'
   },
   slim: {
     nome: 'Slim',
-    url: 'https://www.slimframework.com/'
+    url: 'https://www.slimframework.com'
   },
   mysql: {
     nome: 'MySQL',
-    url: 'https://www.mysql.com/'
+    url: 'https://www.mysql.com'
   },
   nodejs: {
     nome: 'Node.js',
-    url: 'https://nodejs.org/'
+    url: 'https://nodejs.org'
   },
   wordpress: {
     nome: 'Wordpress',
-    url: 'https://wordpress.org/',
+    url: 'https://wordpress.org',
   },
   sqlserver: {
     nome: 'Microsoft SQL Server',
     url: 'https://en.wikipedia.org/wiki/Microsoft_SQL_Server',
+  },
+  vuejs: {
+    nome: 'Vue.js',
+    url: 'https://vuejs.org',
+  },
+  firebase: {
+    nome: 'Firebase',
+    url: 'https://firebase.google.com',
   },
 }
 
