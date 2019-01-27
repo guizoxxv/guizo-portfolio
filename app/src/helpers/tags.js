@@ -83,6 +83,10 @@ const TAGS = {
     nome: 'Firebase',
     url: 'https://firebase.google.com',
   },
+  materialize: {
+    nome: 'Materialize',
+    url: 'https://materializecss.com',
+  },
 }
 
 export default TAGS

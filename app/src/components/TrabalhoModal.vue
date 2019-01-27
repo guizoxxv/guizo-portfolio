@@ -42,12 +42,14 @@
           <a :href="etiqueta | tagLink('url')" target="_blank">{{ etiqueta | tagLink('nome') }}</a>
         </li>
       </ul>
-      <h4>Links</h4>
-      <ul class="links">
-        <li v-for="(link, index) in trabalho.links" :key="index">
-          <a :href="link.url" target="_blank">{{ link.nome }}</a>
-        </li>
-      </ul>
+      <template v-if="trabalho.links">
+        <h4>Links</h4>
+        <ul class="links">
+          <li v-for="(link, index) in trabalho.links" :key="index">
+            <a :href="link.url" target="_blank">{{ link.nome }}</a>
+          </li>
+        </ul>
+      </template>
     </div>
   </modal>
 </template>
