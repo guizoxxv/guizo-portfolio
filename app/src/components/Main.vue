@@ -1,12 +1,21 @@
 <template>
   <main>
-    <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
-      <img :src="trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
-      <div class="card-hover" @click="showModal(index)">
-        <div class="card-hover-content">
-          <h3>{{ trabalho.nome }}</h3>
-          <p class="date">{{ trabalho.data | moment('MMM, YYYY') | ucfirst }}</p>
-          <p>{{ trabalho.descricao.breve }}</p>
+    <div class="etiquetas-wrapper">
+        <ul id="etiquetas-list">
+          <li v-for="(tag, index) in etiquetas" :key="index">
+            {{ tag.nome }}
+          </li>
+        </ul>
+    </div>
+    <div id="trabalhos-wrapper">
+      <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
+        <img :src="trabalho.imagem.arquivo" :alt="trabalho.imagem.alt">
+        <div class="card-hover" @click="showModal(index)">
+          <div class="card-hover-content">
+            <h3>{{ trabalho.nome }}</h3>
+            <p class="date">{{ trabalho.data | moment('MMM, YYYY') | ucfirst }}</p>
+            <p>{{ trabalho.descricao.breve }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -20,13 +29,15 @@
     name: 'Main',
     data() {
       return {
-        trabalhos: []
+        trabalhos: [],
+        etiquetas: [],
+        etiquetasFilters: [],
       }
     },
     created() {
       db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          const data = {
+          let data = {
             'id': doc.id,
             'nome': doc.data().nome,
             'imagem': doc.data().imagem,
@@ -38,6 +49,19 @@
           }
 
           this.trabalhos.push(data)
+        })
+      })
+      db.collection('etiquetas').orderBy('ordem', 'asc').get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          let data = {
+            'id': doc.id,
+            'codigo': doc.data().codigo,
+            'nome': doc.data().nome,
+            'url': doc.data().url,
+            'ordem': doc.data().ordem,
+          }
+
+          this.etiquetas.push(data)
         })
       })
     },
@@ -54,6 +78,31 @@
 
   main {
     margin: 50px 80px;
+  }
+  .etiquetas-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5rem;
+  }
+  #etiquetas-list {
+    list-style-type: none;
+    text-align: center;
+    padding-left: 0;
+    li {
+      display: inline;
+      margin: 0 0.5rem;
+      border: 1px solid white;
+      padding: 0.5rem;
+      text-align: center;
+      &:hover {
+        background-color: grey;
+        cursor: pointer;
+
+      }
+    }
+  }
+  #trabalhos-wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
