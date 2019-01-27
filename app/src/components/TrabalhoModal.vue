@@ -39,7 +39,7 @@
       <h4>Etiquetas</h4>
       <ul class="tags">
         <li v-for="(etiqueta, index) in trabalho.etiquetas" :key="index">
-          <a :href="etiqueta | tagLink('url')" target="_blank">{{ etiqueta | tagLink('nome') }}</a>
+          <a :href="etiquetas | getTag(etiqueta, 'url')" target="_blank">{{ etiquetas | getTag(etiqueta, 'nome') }}</a>
         </li>
       </ul>
       <template v-if="trabalho.links">
@@ -57,6 +57,7 @@
 <script>
   export default {
     name: 'TrabalhoModal',
+    props: ['etiquetas'],
     data() {
       return {
         trabalho: null,

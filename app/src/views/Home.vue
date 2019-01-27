@@ -4,7 +4,6 @@
     <Header></Header>
     <Main></Main>
     <Footer></Footer>
-    <TrabalhoModal></TrabalhoModal>
   </div>
 </template>
 
@@ -13,7 +12,6 @@
   import Header from '@/components/Header'
   import Main from '@/components/Main'
   import Footer from '@/components/Footer'
-  import TrabalhoModal from '@/components/TrabalhoModal'
 
   export default {
     name: 'home',
@@ -21,7 +19,6 @@
       Header,
       Main,
       Footer,
-      TrabalhoModal
     }
   }
 </script>

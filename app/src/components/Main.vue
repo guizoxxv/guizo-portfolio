@@ -1,11 +1,11 @@
 <template>
   <main>
     <div class="etiquetas-wrapper">
-        <ul id="etiquetas-list">
-          <li v-for="(tag, index) in etiquetas" :key="index">
-            {{ tag.nome }}
-          </li>
-        </ul>
+      <ul id="etiquetas-list">
+        <li v-for="(tag, index) in etiquetas" :key="index" @click="filterEtiqueta(tag.codigo, $event)">
+          {{ tag.nome }}
+        </li>
+      </ul>
     </div>
     <div id="trabalhos-wrapper">
       <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
@@ -19,16 +19,22 @@
         </div>
       </div>
     </div>
+    <TrabalhoModal :etiquetas="this.etiquetas"></TrabalhoModal>
   </main>
 </template>
 
 <script>
+  import TrabalhoModal from '@/components/TrabalhoModal'
   import db from '../firebase/firebaseInit'
 
   export default {
     name: 'Main',
+    components: {
+      TrabalhoModal,
+    },
     data() {
       return {
+        trabalhosAll: [],
         trabalhos: [],
         etiquetas: [],
         etiquetasFilters: [],
@@ -48,7 +54,8 @@
             'cliente': doc.data().cliente,
           }
 
-          this.trabalhos.push(data)
+          this.trabalhosAll.push(data)
+          this.trabalhos = this.trabalhosAll
         })
       })
       db.collection('etiquetas').orderBy('ordem', 'asc').get().then(querySnapshot => {
@@ -68,7 +75,32 @@
     methods: {
       showModal(index) {
         this.$modal.show('trabalho-modal', { trabalho: this.trabalhos[index] })
-      }
+      },
+      filterEtiqueta(tagCode, event) {
+        let self = this
+
+        if(this.etiquetasFilters.includes(tagCode)) {
+          this.etiquetasFilters = this.etiquetasFilters.filter(function(etiqueta) {
+            return etiqueta !== tagCode
+          })
+
+          event.target.classList.remove('active')
+        } else {
+          this.etiquetasFilters.push(tagCode)
+
+          event.target.classList.add('active');
+        }
+
+        if(this.etiquetasFilters.length > 0) {
+          this.trabalhos = this.trabalhosAll.filter(function(trabalho) {
+            return self.etiquetasFilters.every(function(etiqueta) {
+              return trabalho.etiquetas.includes(etiqueta)
+            })
+          })
+        } else {
+          this.trabalhos = this.trabalhosAll
+        }
+      },
     }
   }
 </script>
@@ -77,7 +109,7 @@
   $green: #16A085;
 
   main {
-    margin: 50px 80px;
+    margin: 25px 80px;
   }
   .etiquetas-wrapper {
     display: flex;
@@ -90,11 +122,14 @@
     text-align: center;
     padding-left: 0;
     li {
-      display: inline;
-      margin: 0 0.5rem;
+      display: inline-block;
+      margin: 0.5rem;
       border: 1px solid white;
       padding: 0.5rem;
       text-align: center;
+      &.active {
+        background-color: grey;
+      }
       &:hover {
         background-color: grey;
         cursor: pointer;
