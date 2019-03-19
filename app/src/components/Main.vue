@@ -22,7 +22,7 @@
       />
     </div>
     <div class="jobs-count" v-show="!loadingJobs">
-      <span>{{ countTrabalhos }}</span> / <span>{{ countTrabalhosAll }}</span>
+      <span>{{ countTrabalhos }}</span> / <span>{{ jobsCount }}</span>
     </div>
     <div id="trabalhos-wrapper">
       <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
@@ -35,6 +35,11 @@
           </div>
         </div>
       </div>
+    </div>
+    <div id="load-more" v-if="!loadingJobs && countTrabalhos < jobsCount" @click="loadMore()">
+      <span>
+        Carregar mais
+      </span>
     </div>
     <TrabalhoModal :etiquetas="this.etiquetas"></TrabalhoModal>
   </main>
@@ -53,17 +58,21 @@
     },
     data() {
       return {
+        jobsCount: 0,
         loadingTags: true,
         loadingJobs: true,
-        trabalhosAll: [],
         trabalhos: [],
         etiquetas: [],
         etiquetasFilters: [],
       }
     },
     created() {
-      db.collection('etiquetas').orderBy('ordem', 'asc').get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
+      db.collection('trabalhos').get().then(snap => {
+        this.jobsCount = snap.size
+      })
+
+      db.collection('etiquetas').orderBy('ordem', 'asc').get().then(snap => {
+        snap.forEach(doc => {
           let data = {
             'id': doc.id,
             'codigo': doc.data().codigo,
@@ -73,13 +82,14 @@
           }
 
           this.etiquetas.push(data)
-
-          this.loadingTags = false
         })
+
+        this.loadingTags = false
       })
 
-      db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
+
+      db.collection('trabalhos').orderBy('data', 'desc').limit(9).get().then(snap => {
+        snap.forEach(doc => {
           let data = {
             'id': doc.id,
             'nome': doc.data().nome,
@@ -91,12 +101,12 @@
             'cliente': doc.data().cliente,
           }
 
-          this.trabalhosAll.push(data)
-          this.trabalhos = this.trabalhosAll.slice(0, 9)
+          this.trabalhos.push(data)
         })
 
         this.loadingJobs = false
       })
+
     },
     methods: {
       showModal(index) {
@@ -105,46 +115,36 @@
       filterEtiqueta(tagCode, event) {
         this.loadingJobs = true
 
-        document.getElementById('trabalhos-wrapper').style.display = 'hide'
+        db.collection('trabalhos').where('etiquetas', '==', tagCode).orderBy('data', 'desc').limit(this.countTrabalhos).get().then(snap => {
+          this.trabalhos = []
 
-        let self = this
+          snap.forEach(doc => {
+            let data = {
+              'id': doc.id,
+              'nome': doc.data().nome,
+              'imagem': doc.data().imagem,
+              'descricao': doc.data().descricao,
+              'data': doc.data().data.seconds,
+              'etiquetas': doc.data().etiquetas.sort(),
+              'links': doc.data().links,
+              'cliente': doc.data().cliente,
+            }
 
-        if(this.etiquetasFilters.includes(tagCode)) {
-          this.etiquetasFilters = this.etiquetasFilters.filter(function(etiqueta) {
-            return etiqueta !== tagCode
+            this.trabalhos.push(data)
           })
 
-          event.target.classList.remove('active')
-        } else {
-          this.etiquetasFilters.push(tagCode)
-
-          event.target.classList.add('active');
-        }
-
-        if(this.etiquetasFilters.length > 0) {
-          this.trabalhos = this.trabalhosAll.filter(function(trabalho) {
-            return self.etiquetasFilters.every(function(etiqueta) {
-              return trabalho.etiquetas.includes(etiqueta)
-            })
-          })
-        } else {
-          this.trabalhos = this.trabalhosAll
-        }
-
-        setTimeout(() => {
-          this.loadingJobs = false
-
-          document.getElementById('trabalhos-wrapper').style.display = 'grid'
-        }, 250);
+        })
+        
+        this.loadingJobs = false
+      },
+      loadMore() {
+        //
       },
     },
     computed: {
       countTrabalhos() {
         return this.trabalhos.length
       },
-      countTrabalhosAll() {
-        return this.trabalhosAll.length
-      }
     }
   }
 </script>
@@ -239,6 +239,23 @@
     }
     .brief {
       margin: 0;
+    }
+  }
+  #load-more {
+    text-align: center;
+    margin-top: 3rem;
+    color: $green;
+    span {
+      padding: 1rem;
+      border: 1px solid $green;
+      border-radius: 10px;
+      transition: 0.3s;
+      &:hover {
+        background-color: $green;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+      }
     }
   }
 
