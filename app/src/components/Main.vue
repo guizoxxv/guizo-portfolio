@@ -1,11 +1,28 @@
 <template>
   <main>
+    <div class="loading-wrapper" v-show="loadingTags">
+      <looping-rhombuses-spinner
+        :animation-duration="2500"
+        :rhombus-size="15"
+        color="white"
+      />
+    </div>
     <div class="etiquetas-wrapper">
       <ul id="etiquetas-list">
         <li v-for="(tag, index) in etiquetas" :key="index" @click="filterEtiqueta(tag.codigo, $event)">
           {{ tag.nome }}
         </li>
       </ul>
+    </div>
+    <div class="loading-wrapper" v-show="loadingJobs">
+      <looping-rhombuses-spinner
+        :animation-duration="2500"
+        :rhombus-size="15"
+        color="white"
+      />
+    </div>
+    <div class="jobs-count" v-show="!loadingJobs">
+      <span>{{ countTrabalhos }}</span> / <span>{{ countTrabalhosAll }}</span>
     </div>
     <div id="trabalhos-wrapper">
       <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
@@ -26,14 +43,18 @@
 <script>
   import TrabalhoModal from '@/components/TrabalhoModal'
   import db from '../firebase/firebaseInit'
+  import { LoopingRhombusesSpinner } from 'epic-spinners'
 
   export default {
     name: 'Main',
     components: {
       TrabalhoModal,
+      LoopingRhombusesSpinner,
     },
     data() {
       return {
+        loadingTags: true,
+        loadingJobs: true,
         trabalhosAll: [],
         trabalhos: [],
         etiquetas: [],
@@ -41,6 +62,22 @@
       }
     },
     created() {
+      db.collection('etiquetas').orderBy('ordem', 'asc').get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          let data = {
+            'id': doc.id,
+            'codigo': doc.data().codigo,
+            'nome': doc.data().nome,
+            'url': doc.data().url,
+            'ordem': doc.data().ordem,
+          }
+
+          this.etiquetas.push(data)
+
+          this.loadingTags = false
+        })
+      })
+
       db.collection('trabalhos').orderBy('data', 'desc').get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
           let data = {
@@ -55,21 +92,10 @@
           }
 
           this.trabalhosAll.push(data)
-          this.trabalhos = this.trabalhosAll
+          this.trabalhos = this.trabalhosAll.slice(0, 9)
         })
-      })
-      db.collection('etiquetas').orderBy('ordem', 'asc').get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          let data = {
-            'id': doc.id,
-            'codigo': doc.data().codigo,
-            'nome': doc.data().nome,
-            'url': doc.data().url,
-            'ordem': doc.data().ordem,
-          }
 
-          this.etiquetas.push(data)
-        })
+        this.loadingJobs = false
       })
     },
     methods: {
@@ -77,6 +103,10 @@
         this.$modal.show('trabalho-modal', { trabalho: this.trabalhos[index] })
       },
       filterEtiqueta(tagCode, event) {
+        this.loadingJobs = true
+
+        document.getElementById('trabalhos-wrapper').style.display = 'hide'
+
         let self = this
 
         if(this.etiquetasFilters.includes(tagCode)) {
@@ -100,7 +130,21 @@
         } else {
           this.trabalhos = this.trabalhosAll
         }
+
+        setTimeout(() => {
+          this.loadingJobs = false
+
+          document.getElementById('trabalhos-wrapper').style.display = 'grid'
+        }, 250);
       },
+    },
+    computed: {
+      countTrabalhos() {
+        return this.trabalhos.length
+      },
+      countTrabalhosAll() {
+        return this.trabalhosAll.length
+      }
     }
   }
 </script>
@@ -108,6 +152,18 @@
 <style lang="scss" scoped>
   $green: #16A085;
 
+  .loading-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jobs-count {
+    text-align: center;
+    margin: 2rem 0;
+    span {
+      font-weight: bold;
+    }
+  }
   main {
     margin: 25px 80px;
   }
@@ -115,7 +171,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 5rem;
   }
   #etiquetas-list {
     list-style-type: none;
