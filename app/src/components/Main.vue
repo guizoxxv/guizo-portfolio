@@ -9,7 +9,7 @@
     </div>
     <div class="etiquetas-wrapper">
       <ul id="etiquetas-list">
-        <li v-for="(tag, index) in etiquetas" :key="index" @click="filterEtiqueta(tag.codigo, $event)">
+        <li v-for="(tag, index) in etiquetas" :key="index" @click="filterTags(tag.codigo, $event)" v-bind:class="{ active: tag.codigo == filter }">
           {{ tag.nome }}
         </li>
       </ul>
@@ -22,7 +22,7 @@
       />
     </div>
     <div class="jobs-count" v-show="!loadingJobs">
-      <span>{{ countTrabalhos }}</span> / <span>{{ jobsCount }}</span>
+      <span>{{ countJobs }}</span> / <span>{{ jobsCount }}</span>
     </div>
     <div id="trabalhos-wrapper">
       <div v-for="(trabalho, index) in trabalhos" :key="index" class="card">
@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div id="load-more" v-if="!loadingJobs && countTrabalhos < jobsCount" @click="loadMore()">
+    <div id="load-more" v-if="!loadingJobs && hasMoreJobs" @click="loadMore()">
       <span>
         Carregar mais
       </span>
@@ -59,11 +59,13 @@
     data() {
       return {
         jobsCount: 0,
+        jobsFilteredCount: 0,
         loadingTags: true,
         loadingJobs: true,
         trabalhos: [],
         etiquetas: [],
-        etiquetasFilters: [],
+        filter: null,
+        limit: 9,
       }
     },
     created() {
@@ -87,39 +89,56 @@
         this.loadingTags = false
       })
 
-
-      db.collection('trabalhos').orderBy('data', 'desc').limit(9).get().then(snap => {
-        snap.forEach(doc => {
-          let data = {
-            'id': doc.id,
-            'nome': doc.data().nome,
-            'imagem': doc.data().imagem,
-            'descricao': doc.data().descricao,
-            'data': doc.data().data.seconds,
-            'etiquetas': doc.data().etiquetas.sort(),
-            'links': doc.data().links,
-            'cliente': doc.data().cliente,
-          }
-
-          this.trabalhos.push(data)
-        })
-
-        this.loadingJobs = false
-      })
-
+      this.loadJobs(9);
     },
     methods: {
       showModal(index) {
         this.$modal.show('trabalho-modal', { trabalho: this.trabalhos[index] })
       },
-      filterEtiqueta(tagCode, event) {
+      filterTags(tagCode, event) {
         this.loadingJobs = true
-        
-        let limit = this.countTrabalhos > 0 ? this.countTrabalhos : 9;
 
-        db.collection('trabalhos').where('etiquetas', 'array-contains', tagCode).orderBy('data', 'desc').limit(limit).get().then(snap => {
-          this.trabalhos = []
+        if(tagCode === this.filter) {
+          this.loadJobs(this.limit)
 
+          this.filter = null
+          this.jobsFilteredCount = 0
+        } else {
+          db.collection('trabalhos').where('etiquetas', 'array-contains', tagCode).get().then(snap => {
+            this.jobsFilteredCount = snap.size
+          })
+
+          this.limit = this.countJobs > 9 ? this.countJobs : 9
+
+          db.collection('trabalhos').where('etiquetas', 'array-contains', tagCode).orderBy('data', 'desc').limit(this.limit).get().then(snap => {
+            this.trabalhos = []
+
+            snap.forEach(doc => {
+              let data = {
+                'id': doc.id,
+                'nome': doc.data().nome,
+                'imagem': doc.data().imagem,
+                'descricao': doc.data().descricao,
+                'data': doc.data().data.seconds,
+                'etiquetas': doc.data().etiquetas.sort(),
+                'links': doc.data().links,
+                'cliente': doc.data().cliente,
+              }
+
+              this.trabalhos.push(data)
+            })
+          })
+          
+          this.filter = tagCode
+        }
+
+        this.loadingJobs = false
+      },
+      loadJobs(limit) {
+        this.loadingJobs = true
+        this.trabalhos = []
+
+        db.collection('trabalhos').orderBy('data', 'desc').limit(limit).get().then(snap => {
           snap.forEach(doc => {
             let data = {
               'id': doc.id,
@@ -134,19 +153,31 @@
 
             this.trabalhos.push(data)
           })
-
         })
-        
+
         this.loadingJobs = false
       },
       loadMore() {
-        //
+        if(this.limit < this.jobsCount) {
+          let newLimit = this.limit + 9
+
+          this.limit = newLimit > this.jobsCount ? this.jobsCount : newLimit
+
+          this.loadJobs(this.limit)
+        }
       },
     },
     computed: {
-      countTrabalhos() {
+      countJobs() {
         return this.trabalhos.length
       },
+      hasMoreJobs() {
+        if(this.filter === null) {
+          return this.countJobs < this.jobsCount
+        }
+
+        return this.trabalhos.length < this.jobsFilteredCount
+      }
     }
   }
 </script>
