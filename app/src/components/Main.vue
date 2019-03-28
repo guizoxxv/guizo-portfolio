@@ -114,8 +114,10 @@
       },
       filterEtiqueta(tagCode, event) {
         this.loadingJobs = true
+        
+        let limit = this.countTrabalhos > 0 ? this.countTrabalhos : 9;
 
-        db.collection('trabalhos').where('etiquetas', '==', tagCode).orderBy('data', 'desc').limit(this.countTrabalhos).get().then(snap => {
+        db.collection('trabalhos').where('etiquetas', 'array-contains', tagCode).orderBy('data', 'desc').limit(limit).get().then(snap => {
           this.trabalhos = []
 
           snap.forEach(doc => {
